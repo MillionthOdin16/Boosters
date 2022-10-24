@@ -32,19 +32,19 @@ class Booster(
         plugin.namespacedKeyFactory.create(id),
         PersistentDataKeyType.INT,
         0
-    ).player()
+    )
 
     val activeDataKey: PersistentDataKey<String> = PersistentDataKey(
         plugin.namespacedKeyFactory.create("${id}_active"),
         PersistentDataKeyType.STRING,
         ""
-    ).server()
+    )
 
     val expiryTimeKey = PersistentDataKey(
         plugin.namespacedKeyFactory.create("${id}_expiry_time"),
         PersistentDataKeyType.DOUBLE,
         0.0
-    ).server()
+    )
 
     val active: ActivatedBooster?
         get() {
@@ -108,13 +108,15 @@ class Booster(
 
     val guiColumn = config.getInt("gui.position.column")
 
-    override val conditions = config.getSubsections("conditions").mapNotNull {
-        Conditions.compile(it, "Booster $id")
-    }.toSet()
+    override val conditions = Conditions.compile(
+        config.getSubsections("conditions"),
+        "Booster $id"
+    )
 
-    override val effects = config.getSubsections("effects").mapNotNull {
-        Effects.compile(it, "Booster $id")
-    }.toSet()
+    override val effects = Effects.compile(
+        config.getSubsections("effects"),
+        "Booster $id"
+    )
 
     init {
         Boosters.addNewBooster(this)
